@@ -1,0 +1,10 @@
+kafka:
+  clusters:
+    - name: kafka-kraft
+      bootstrapServers: kafka1:9093,kafka2:9093,kafka3:9093
+      properties:
+        security.protocol: SASL_SSL
+        sasl.mechanism: SCRAM-SHA-512
+        sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="admin-secret";
+        ssl.truststore.location: /certs/truststore.jks
+        ssl.truststore.password: changeit
