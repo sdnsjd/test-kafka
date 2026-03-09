@@ -218,3 +218,22 @@ docker compose down -v
          ↑
    Ваш коннектор (cloudstudio)
 ```
+
+
+
+kafka-topics.sh --bootstrap-server localhost:19093 \
+    --command-config ~/kafka-kraft/config/local-client.properties \
+    --list
+
+
+
+kafka-console-consumer.sh --bootstrap-server localhost:19093 \
+    --topic <имя_топика> \
+    --consumer.config ~/kafka-kraft/config/local-client.properties \
+    --from-beginning
+
+
+kafka-leader-election.sh --bootstrap-server localhost:19093 \
+    --command-config ~/kafka-kraft/config/local-client.properties \
+    --election-type preferred \
+    --all-topic-partitions

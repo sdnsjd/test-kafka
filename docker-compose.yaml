@@ -15,7 +15,7 @@ services:
     hostname: kafka1
     ports:
       - "19092:9092"
-      - "19093:9093"
+      - "19093:19093"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -34,6 +34,10 @@ services:
       KAFKA_SSL_TRUSTSTORE_FILENAME: truststore.jks
       KAFKA_SSL_TRUSTSTORE_CREDENTIALS: keystore_creds
       KAFKA_SSL_CLIENT_AUTH: none
+
+      KAFKA_AUTO_LEADER_REBALANCE_ENABLE: "true"
+      KAFKA_LEADER_IMBALANCE_CHECK_INTERVAL_SECONDS: "60"
+      KAFKA_LEADER_IMBALANCE_PER_BROKER_PERCENTAGE: "10"      
 
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN,SCRAM-SHA-512
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
@@ -71,7 +75,7 @@ services:
     hostname: kafka2
     ports:
       - "29092:9092"
-      - "29093:9093"
+      - "29093:29093"
     environment:
       KAFKA_NODE_ID: 2
       KAFKA_PROCESS_ROLES: broker,controller
@@ -90,6 +94,10 @@ services:
       KAFKA_SSL_TRUSTSTORE_FILENAME: truststore.jks
       KAFKA_SSL_TRUSTSTORE_CREDENTIALS: keystore_creds
       KAFKA_SSL_CLIENT_AUTH: none
+
+      KAFKA_AUTO_LEADER_REBALANCE_ENABLE: "true"
+      KAFKA_LEADER_IMBALANCE_CHECK_INTERVAL_SECONDS: "60"
+      KAFKA_LEADER_IMBALANCE_PER_BROKER_PERCENTAGE: "10"
 
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN,SCRAM-SHA-512
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
@@ -127,7 +135,7 @@ services:
     hostname: kafka3
     ports:
       - "39092:9092"
-      - "39093:9093"
+      - "39093:39093"
     environment:
       KAFKA_NODE_ID: 3
       KAFKA_PROCESS_ROLES: broker,controller
@@ -146,6 +154,10 @@ services:
       KAFKA_SSL_TRUSTSTORE_FILENAME: truststore.jks
       KAFKA_SSL_TRUSTSTORE_CREDENTIALS: keystore_creds
       KAFKA_SSL_CLIENT_AUTH: none
+
+      KAFKA_AUTO_LEADER_REBALANCE_ENABLE: "true"
+      KAFKA_LEADER_IMBALANCE_CHECK_INTERVAL_SECONDS: "60"
+      KAFKA_LEADER_IMBALANCE_PER_BROKER_PERCENTAGE: "10"
 
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN,SCRAM-SHA-512
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
@@ -200,24 +212,24 @@ services:
         - ./certs:/certs:ro
         - ./config/kafka-ui.yaml:/etc/kafkaui/dynamic_config.yaml:ro
 
-  nats:
-    image: art.platformeco.cloud/nats-streaming:latest
-    ports:
-      - "4222:4222"
-      - "8222:8222"
-    networks:
-      - kafka-net
+  # nats:
+  #   image: art.platformeco.cloud/nats-streaming:latest
+  #   ports:
+  #     - "4222:4222"
+  #     - "8222:8222"
+  #   networks:
+  #     - kafka-net
       
-  satellite:
-    image: art.platformeco.cloud/kafka-satellite:latest
-    environment:
-      - NATS_ADDR=nats://nats:4222
-      - KAFKA_IPC_VERSION=LATEST
-      - LOGGER_LEVEL=debug
-    depends_on:
-      - nats
-    networks:
-      - kafka-net
+  # satellite:
+  #   image: art.platformeco.cloud/kafka-satellite:latest
+  #   environment:
+  #     - NATS_ADDR=nats://nats:4222
+  #     - KAFKA_IPC_VERSION=LATEST
+  #     - LOGGER_LEVEL=debug
+  #   depends_on:
+  #     - nats
+  #   networks:
+  #     - kafka-net
 
 networks:
   kafka-net:
