@@ -212,24 +212,24 @@ services:
         - ./certs:/certs:ro
         - ./config/kafka-ui.yaml:/etc/kafkaui/dynamic_config.yaml:ro
 
-  # nats:
-  #   image: art.platformeco.cloud/nats-streaming:latest
-  #   ports:
-  #     - "4222:4222"
-  #     - "8222:8222"
-  #   networks:
-  #     - kafka-net
+  nats:
+    image: "nats-streaming"
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - kafka-net
       
-  # satellite:
-  #   image: art.platformeco.cloud/kafka-satellite:latest
-  #   environment:
-  #     - NATS_ADDR=nats://nats:4222
-  #     - KAFKA_IPC_VERSION=LATEST
-  #     - LOGGER_LEVEL=debug
-  #   depends_on:
-  #     - nats
-  #   networks:
-  #     - kafka-net
+  satellite:
+    image: docker-release-platformeco.art.lmru.tech/kafka-satellite:latest
+    environment:
+      - NATS_ADDR=nats://nats:4222
+      - KAFKA_IPC_VERSION=LATEST
+      - LOGGER_LEVEL=debug
+    depends_on:
+      - nats
+    networks:
+      - kafka-net
 
 networks:
   kafka-net:
