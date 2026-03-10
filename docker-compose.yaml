@@ -212,6 +212,47 @@ services:
         - ./certs:/certs:ro
         - ./config/kafka-ui.yaml:/etc/kafkaui/dynamic_config.yaml:ro
 
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.6.1
+    container_name: schema-registry
+    hostname: schema-registry
+    restart: unless-stopped
+    networks:
+      - kafka-net
+    ports:
+      - "8081:8081"
+    depends_on:
+      kafka1:
+        condition: service_healthy
+      kafka2:
+        condition: service_healthy
+      kafka3:
+        condition: service_healthy
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+
+      # Подключение к брокерам через SASL_PLAINTEXT (внутренняя сеть)
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "SASL_PLAINTEXT://kafka1:9092,SASL_PLAINTEXT://kafka2:9092,SASL_PLAINTEXT://kafka3:9092"
+      SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: PLAIN
+      SCHEMA_REGISTRY_KAFKASTORE_SASL_JAAS_CONFIG: >-
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="broker"
+        password="broker-secret";
+
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: 3
+
+      # Совместимость по умолчанию
+      SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL: BACKWARD
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/subjects"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
   nats:
     image: "nats-streaming"
     ports:
