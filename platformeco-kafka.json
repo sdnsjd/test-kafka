@@ -1,0 +1,61 @@
+      {
+        "id": "kafka-connector",
+        "name": "kafka-connector",
+        "enabled": true,
+        "settings": {
+          "stdoutSendErrors": true,
+          "connection": {
+            "group.id": "my-group7",
+            "bootstrap.servers": [
+              "kafka1:9092",
+              "kafka2:9092",
+              "kafka3:9092"
+            ]
+          },
+          "commitBeforeRebalance": false,
+          "parameters": [
+            {
+              "key": "security.protocol",
+              "value": "SASL_PLAINTEXT"
+            },
+            {
+              "key": "sasl.mechanism",
+              "value": "PLAIN"
+            },
+            {
+              "key": "sasl.jaas.config",
+              "value": "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"broker\" password=\"broker-secret\";"
+            },
+            {
+              "key": "max.poll.records",
+              "value": "10"
+            },
+            {
+              "key": "auto.offset.reset",
+              "value": "earliest"
+            },
+            {
+              "key": "enable.auto.commit",
+              "value": "true"
+            },
+            {
+              "key": "auto.commit.interval.ms",
+              "value": "100"
+            }
+          ],
+          "schemaRegistry": {
+            "host": "http://localhost:8081"
+          },
+          "nats": {
+            "servers": [
+              "localhost:4222"
+            ]
+          },
+          "tracing": {
+            "enabled": true,
+            "meta": true,
+            "messages": true,
+            "batch": true
+          }
+        }
+      }
