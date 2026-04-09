@@ -10,9 +10,11 @@ openssl pkcs12 \
   -out ./certs/ca-cert.pem \
   -passin pass:changeit
   
+python3 -m venv .venv
+source .venv/bin/activate
 
 Зависимости:
-  pip install confluent-kafka[avro] fastavro requests
+  pip install 'confluent-kafka[avro]' fastavro requests
 """
 
 import logging
@@ -43,7 +45,6 @@ USER_EVENT_SCHEMA = """
 {
   "type": "record",
   "name": "UserEvent",
-  "namespace": "com.example",
   "fields": [
     {"name": "user_id",   "type": "int"},
     {"name": "action",    "type": "string"},

@@ -8,6 +8,9 @@ Schema Registry Admin — управление Avro-схемами.
   - Проверить совместимость новой схемы
   - Удалить субъект или версию
 
+python3 -m venv .venv
+source .venv/bin/activate
+
 Зависимости:
   pip install confluent-kafka[avro] requests
 """

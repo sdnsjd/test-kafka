@@ -17,6 +17,8 @@ openssl pkcs12 \
   -out ./certs/ca-cert.pem \
   -passin pass:changeit
   
+python3 -m venv .venv
+source .venv/bin/activate
 
 Зависимости:
   pip install confluent-kafka
